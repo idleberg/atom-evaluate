@@ -1,7 +1,7 @@
 {
   "name": "run-in-console",
   "description": "Runs CoffeeScript, JavaScript, LiveScript or TypeScript in the Atom console",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "contributors": [
     {
       "name": "Jan T. Sott",
