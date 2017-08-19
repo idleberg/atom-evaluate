@@ -18,36 +18,30 @@ module.exports =
       type: "boolean"
       default: true
       order: 2
-    showNotifications:
-      title: "Show Notifications"
-      description: "Displays errors and warnings in notification"
-      type: "boolean"
-      default: true
-      order: 3
     scopesJavaScript:
       title: "Scopes for JavaScript"
       description: "Space-delimited list of scopes identifying JavaScript files"
       type: "string"
       default: "source.js source.embedded.js"
-      order: 4
+      order: 3
     scopesCoffeeScript:
       title: "Scopes for CoffeeScript"
       description: "Space-delimited list of scopes identifying CoffeeScript files"
       type: "string"
       default: "source.coffee source.embedded.coffee"
-      order: 5
+      order: 4
     scopesTypeScript:
       title: "Scopes for TypeScript"
       description: "Space-delimited list of scopes identifying TypeScript files"
       type: "string"
       default: "source.ts"
-      order: 6
+      order: 5
     scopesLiveScript:
       title: "Scopes for LiveScript"
       description: "Space-delimited list of scopes identifying LiveScript files"
       type: "string"
       default: "source.livescript"
-      order: 7
+      order: 6
   subscriptions: null
 
   activate: ->
@@ -141,9 +135,9 @@ module.exports =
 
     @runCodeInScope code, scope, (error, warning, result) ->
       if error
-        atom.notifications.addError("run-in-console", detail: error, dismissable: false) if error and atom.config.get "run-in-console.showNotifications"
+        console.error error if error
       else if warning
-        atom.notifications.addWarning("run-in-console", detail: warning, dismissable: false) if warning and atom.config.get "run-in-console.showNotifications"
+        console.warn warning if warning
       else
         console.log result if result
 
