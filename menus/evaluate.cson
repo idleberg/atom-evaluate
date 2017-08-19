@@ -1,5 +1,5 @@
 'context-menu':
   'atom-text-editor': [
-    'label': 'Run Code'
+    'label': 'Evaluate Code'
     'command': 'evaluate:run-code'
   ]
