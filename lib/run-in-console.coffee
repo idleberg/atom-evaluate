@@ -167,7 +167,7 @@ module.exports =
     result = ""
 
     for scope in scopeList
-      result += "#{atom.config.get("run-in-console.scopes#{scope}").trim()} "
+      result += atom.config.get("run-in-console.scopes#{scope}").trim() + " "
 
     return result.trim().split " "
 
