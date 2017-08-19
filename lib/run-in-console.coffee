@@ -18,30 +18,36 @@ module.exports =
       type: "boolean"
       default: true
       order: 2
+    showNotifications:
+      title: "Show Notifications"
+      description: "Displays errors and warnings in notification"
+      type: "boolean"
+      default: true
+      order: 3
     scopesJavaScript:
       title: "Scopes for JavaScript"
       description: "Space-delimited list of scopes identifying JavaScript files"
       type: "string"
       default: "source.js source.embedded.js"
-      order: 3
+      order: 4
     scopesCoffeeScript:
       title: "Scopes for CoffeeScript"
       description: "Space-delimited list of scopes identifying CoffeeScript files"
       type: "string"
       default: "source.coffee source.embedded.coffee"
-      order: 4
+      order: 5
     scopesTypeScript:
       title: "Scopes for TypeScript"
       description: "Space-delimited list of scopes identifying TypeScript files"
       type: "string"
       default: "source.ts"
-      order: 5
+      order: 6
     scopesLiveScript:
       title: "Scopes for LiveScript"
       description: "Space-delimited list of scopes identifying LiveScript files"
       type: "string"
       default: "source.livescript"
-      order: 6
+      order: 7
   subscriptions: null
 
   activate: ->
@@ -59,65 +65,65 @@ module.exports =
   runCodeInScope: (code, scope, callback) ->
     vm = require "vm"
 
-    switch scope
-      when atom.config.get("run-in-console.scopesJavaScript").trim().split(' ').join(',') #.indexOf(scope) #"source.js", "source.embedded.js"
-        vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
+    # switch scope
+    if @isSupportedScope(scope, "JavaScript")
+      vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
 
-        try
-          result = @executeJavaScript(jsCode)
+      try
+        result = @executeJavaScript(code)
 
-          callback(null, null, result)
-        catch error
-          callback(error)
+        callback(null, null, result)
+      catch error
+        callback(error)
 
-      when "source.coffee", "source.embedded.coffee"
-        coffee = require "coffee-script"
-        vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
+    else if @isSupportedScope(scope, "CoffeeScript")
+      coffee = require "coffee-script"
+      vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
 
-        try
-          vm.runInThisContext(console.time("Transpiled CoffeeScript")) if atom.config.get "run-in-console.showTimer"
-          jsCode = coffee.compile(code, bare: true)
-          vm.runInThisContext(console.timeEnd("Transpiled CoffeeScript")) if atom.config.get "run-in-console.showTimer"
+      try
+        vm.runInThisContext(console.time("Transpiled CoffeeScript")) if atom.config.get "run-in-console.showTimer"
+        jsCode = coffee.compile(code, bare: true)
+        vm.runInThisContext(console.timeEnd("Transpiled CoffeeScript")) if atom.config.get "run-in-console.showTimer"
 
-          result = @executeJavaScript(jsCode)
+        result = @executeJavaScript(jsCode)
 
-          callback(null, null, result)
-        catch error
-          callback(error)
+        callback(null, null, result)
+      catch error
+        callback(error)
 
-      when "source.ts"
-        typestring = require "typestring"
-        vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
+    else if @isSupportedScope(scope, "TypeScript")
+      typestring = require "typestring"
+      vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
 
-        try
-          vm.runInThisContext(console.time("Transpiled TypeScript")) if atom.config.get "run-in-console.showTimer"
-          jsCode = typestring.compile(code)
-          vm.runInThisContext(console.timeEnd("Transpiled TypeScript")) if atom.config.get "run-in-console.showTimer"
+      try
+        vm.runInThisContext(console.time("Transpiled TypeScript")) if atom.config.get "run-in-console.showTimer"
+        jsCode = typestring.compile(code)
+        vm.runInThisContext(console.timeEnd("Transpiled TypeScript")) if atom.config.get "run-in-console.showTimer"
 
-          result = @executeJavaScript(jsCode)
+        result = @executeJavaScript(jsCode)
 
-          callback(null, null, result)
-        catch error
-          callback(error)
+        callback(null, null, result)
+      catch error
+        callback(error)
 
-      when "source.livescript"
-        livescript = require "LiveScript"
-        vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
+    else if @isSupportedScope(scope, "LiveScript")
+      livescript = require "LiveScript"
+      vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
 
-        try
-          vm.runInThisContext(console.time("Transpiled LiveScript")) if atom.config.get "run-in-console.showTimer"
-          jsCode = livescript.compile(code, bare: true)
-          vm.runInThisContext(console.timeEnd("Transpiled LiveScript")) if atom.config.get "run-in-console.showTimer"
+      try
+        vm.runInThisContext(console.time("Transpiled LiveScript")) if atom.config.get "run-in-console.showTimer"
+        jsCode = livescript.compile(code, bare: true)
+        vm.runInThisContext(console.timeEnd("Transpiled LiveScript")) if atom.config.get "run-in-console.showTimer"
 
-          result = @executeJavaScript(jsCode)
+        result = @executeJavaScript(jsCode)
 
-          callback(null, null, result)
-        catch error
-          callback(error)
+        callback(null, null, result)
+      catch error
+        callback(error)
 
-      else
-        warning = "Attempted to run in scope '#{scope}', which isn't supported."
-        callback(null, warning)
+    else
+      warning = "Attempted to run in scope '#{scope}', which isn't supported."
+      callback(null, warning)
 
   runInConsole: ->
     atom.openDevTools() if atom.config.get "run-in-console.openDeveloperToolsOnRun"
@@ -135,9 +141,9 @@ module.exports =
 
     @runCodeInScope code, scope, (error, warning, result) ->
       if error
-        console.error error if error
+        atom.notifications.addError("run-in-console", detail: error, dismissable: false) if error and atom.config.get "run-in-console.showNotifications"
       else if warning
-        console.warn warning if warning
+        atom.notifications.addWarning("run-in-console", detail: warning, dismissable: false) if warning and atom.config.get "run-in-console.showNotifications"
       else
         console.log result if result
 
@@ -155,6 +161,12 @@ module.exports =
 
     for scope in scopes
       return scope if scope in editor.getLastCursor().getScopeDescriptor().scopes
+
+  isSupportedScope: (scope, type)->
+    if scope in atom.config.get("run-in-console.scopes#{type}").trim().split(" ")
+      return true
+
+    return false
 
   getScopes: ->
     scopeList = ["JavaScript", "CoffeeScript", "TypeScript", "LiveScript"]
