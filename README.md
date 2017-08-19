@@ -6,7 +6,7 @@
 [![Travis](https://img.shields.io/travis/idleberg/atom-evaluate.svg?style=flat-square)](https://travis-ci.org/idleberg/atom-evaluate)
 [![David](https://img.shields.io/david/dev/idleberg/atom-evaluate.svg?style=flat-square)](https://david-dm.org/idleberg/atom-evaluate?type=dev)
 
-A fork of Roben Kleene's [run-in-atom](https://github.com/robenkleene/run-in-atom) package. [See it in action](https://vimeo.com/230280295)
+Evaluates JavaScript, TypeScript, CoffeeScript, and LiveScript directly in Atom. A fork of Roben Kleene's [run-in-atom](https://github.com/robenkleene/run-in-atom) package. [See it in action](https://vimeo.com/230280295)!
 
 ## Features
 
