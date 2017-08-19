@@ -1,14 +1,14 @@
 module.exports =
   config:
-    openDeveloperToolsOnRun:
+    openDeveloperTools:
       title: "Open Developer Tools"
-      description: "Opens the Developer Tools prior to running code"
+      description: "Opens the Developer Tools prior to evaluating code"
       type: "boolean",
       default: true
       order: 0
     alwaysClearConsole:
       title: "Always Clear Console"
-      description: "Clears the console prior to running code"
+      description: "Clears the console prior to evaluating code"
       type: "boolean"
       default: false
       order: 1
@@ -62,7 +62,7 @@ module.exports =
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add "atom-workspace", "run-in-console:run-in-console": => @runInConsole()
+    @subscriptions.add atom.commands.add "atom-workspace", "evaluate:run-code": => @evaluate()
 
   deactivate: ->
     @subscriptions?.dispose()
@@ -73,10 +73,10 @@ module.exports =
 
     # switch scope
     if @isSupportedScope(scope, "JavaScript")
-      vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
+      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.alwaysClearConsole"
 
       try
-        result = @executeJavaScript(code)
+        result = @evaluateJavaScript(code)
 
         callback(null, null, result)
       catch error
@@ -84,14 +84,14 @@ module.exports =
 
     else if @isSupportedScope(scope, "CoffeeScript")
       coffee = require "coffee-script"
-      vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
+      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.alwaysClearConsole"
 
       try
-        vm.runInThisContext(console.time("Transpiled CoffeeScript")) if atom.config.get "run-in-console.showTimer"
+        vm.runInThisContext(console.time("Transpiled CoffeeScript")) if atom.config.get "evaluate.showTimer"
         jsCode = coffee.compile(code, bare: true)
-        vm.runInThisContext(console.timeEnd("Transpiled CoffeeScript")) if atom.config.get "run-in-console.showTimer"
+        vm.runInThisContext(console.timeEnd("Transpiled CoffeeScript")) if atom.config.get "evaluate.showTimer"
 
-        result = @executeJavaScript(jsCode)
+        result = @evaluateJavaScript(jsCode)
 
         callback(null, null, result)
       catch error
@@ -99,14 +99,14 @@ module.exports =
 
     else if @isSupportedScope(scope, "TypeScript")
       typestring = require "typestring"
-      vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
+      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.alwaysClearConsole"
 
       try
-        vm.runInThisContext(console.time("Transpiled TypeScript")) if atom.config.get "run-in-console.showTimer"
+        vm.runInThisContext(console.time("Transpiled TypeScript")) if atom.config.get "evaluate.showTimer"
         jsCode = typestring.compile(code)
-        vm.runInThisContext(console.timeEnd("Transpiled TypeScript")) if atom.config.get "run-in-console.showTimer"
+        vm.runInThisContext(console.timeEnd("Transpiled TypeScript")) if atom.config.get "evaluate.showTimer"
 
-        result = @executeJavaScript(jsCode)
+        result = @evaluateJavaScript(jsCode)
 
         callback(null, null, result)
       catch error
@@ -114,28 +114,28 @@ module.exports =
 
     else if @isSupportedScope(scope, "LiveScript")
       livescript = require "LiveScript"
-      vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
+      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.alwaysClearConsole"
 
       try
-        vm.runInThisContext(console.time("Transpiled LiveScript")) if atom.config.get "run-in-console.showTimer"
+        vm.runInThisContext(console.time("Transpiled LiveScript")) if atom.config.get "evaluate.showTimer"
         jsCode = livescript.compile(code, bare: true)
-        vm.runInThisContext(console.timeEnd("Transpiled LiveScript")) if atom.config.get "run-in-console.showTimer"
+        vm.runInThisContext(console.timeEnd("Transpiled LiveScript")) if atom.config.get "evaluate.showTimer"
 
-        result = @executeJavaScript(jsCode)
+        result = @evaluateJavaScript(jsCode)
 
         callback(null, null, result)
       catch error
         callback(error)
 
     else
-      warning = "Attempted to run in scope '#{scope}', which isn't supported."
+      warning = "Evaluating '#{scope}' is not supported."
       callback(null, warning)
 
-  runInConsole: ->
-    atom.openDevTools() if atom.config.get "run-in-console.openDeveloperToolsOnRun"
+  evaluate: ->
+    atom.openDevTools() if atom.config.get "evaluate.openDeveloperTools"
       
     editor = atom.workspace.getActiveTextEditor()
-    atom.notifications.addWarning("**run-in-console**: No open files", dismissable: false) unless editor?.constructor.name is "TextEditor" or editor?.constructor.name is "ImageEditor"
+    atom.notifications.addWarning("**evaluate**: No open files", dismissable: false) unless editor?.constructor.name is "TextEditor" or editor?.constructor.name is "ImageEditor"
 
     code = editor.getSelectedText()
 
@@ -153,21 +153,21 @@ module.exports =
       else
         console.log result if result
 
-  executeJavaScript: (code) ->
+  evaluateJavaScript: (code) ->
     vm = require "vm"
 
     babelCode = @babelCompile(code)
 
-    vm.runInThisContext(console.time("Executed JavaScript")) if atom.config.get "run-in-console.showTimer"
+    vm.runInThisContext(console.time("Evaluated JavaScript")) if atom.config.get "evaluate.showTimer"
     result = vm.runInThisContext(babelCode.code)
-    vm.runInThisContext(console.timeEnd("Executed JavaScript")) if atom.config.get "run-in-console.showTimer"
+    vm.runInThisContext(console.timeEnd("Evaluated JavaScript")) if atom.config.get "evaluate.showTimer"
 
     return result
 
   babelCompile: (code) ->
     babel = require "babel-core"
 
-    babelPreset = atom.config.get("run-in-console.babelPreset") || "es2015"
+    babelPreset = atom.config.get("evaluate.babelPreset") || "es2015"
 
     babelOptions =
       ast: false
@@ -183,7 +183,7 @@ module.exports =
       return scope if scope in editor.getLastCursor().getScopeDescriptor().scopes
 
   isSupportedScope: (scope, type)->
-    if scope in atom.config.get("run-in-console.scopes#{type}").trim().split(" ")
+    if scope in atom.config.get("evaluate.scopes#{type}").trim().split(" ")
       return true
 
     return false
@@ -193,7 +193,7 @@ module.exports =
     result = ""
 
     for scope in scopeList
-      result += atom.config.get("run-in-console.scopes#{scope}").trim() + " "
+      result += atom.config.get("evaluate.scopes#{scope}").trim() + " "
 
     return result.trim().split " "
 

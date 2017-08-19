@@ -12,11 +12,11 @@
       "url": "https://github.com/robenkleene"
     }
   ],
-  "main": "./lib/run-in-console",
-  "repository": "https://github.com/idleberg/atom-run-in-console",
+  "main": "./lib/evaluate",
+  "repository": "https://github.com/idleberg/atom-evaluate",
   "activationCommands": {
     "atom-text-editor": [
-      "run-in-console:run-in-console"
+      "evaluate:run-code"
     ]
   },
   "license": "MIT",
