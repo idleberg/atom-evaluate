@@ -17,7 +17,7 @@ module.exports =
           title: "Always Clear Console"
           description: "Clears the console prior to evaluating code"
           type: "boolean"
-          default: false
+          default: true
           order: 1
         showTimer:
           title: "Show Timer"
