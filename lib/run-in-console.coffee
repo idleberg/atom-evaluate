@@ -18,30 +18,42 @@ module.exports =
       type: "boolean"
       default: true
       order: 2
+    babelPreset:
+      title: "Babel Preset"
+      description: "Specify the default [preset](https://babeljs.io/docs/plugins/#presets) for the Babel compiler"
+      type: "string",
+      default: "es2015",
+      enum: [
+        "es2015",
+        "es2016",
+        "es2017",
+        "env"
+      ],
+      order: 3
     scopesJavaScript:
       title: "Scopes for JavaScript"
       description: "Space-delimited list of scopes identifying JavaScript files"
       type: "string"
       default: "source.js source.embedded.js"
-      order: 3
+      order: 4
     scopesCoffeeScript:
       title: "Scopes for CoffeeScript"
       description: "Space-delimited list of scopes identifying CoffeeScript files"
       type: "string"
       default: "source.coffee source.embedded.coffee"
-      order: 4
+      order: 5
     scopesTypeScript:
       title: "Scopes for TypeScript"
       description: "Space-delimited list of scopes identifying TypeScript files"
       type: "string"
       default: "source.ts"
-      order: 5
+      order: 6
     scopesLiveScript:
       title: "Scopes for LiveScript"
       description: "Space-delimited list of scopes identifying LiveScript files"
       type: "string"
       default: "source.livescript"
-      order: 6
+      order: 7
   subscriptions: null
 
   activate: ->
@@ -144,11 +156,25 @@ module.exports =
   executeJavaScript: (code) ->
     vm = require "vm"
 
+    babelCode = @babelCompile(code)
+
     vm.runInThisContext(console.time("Executed JavaScript")) if atom.config.get "run-in-console.showTimer"
-    result = vm.runInThisContext(code)
+    result = vm.runInThisContext(babelCode.code)
     vm.runInThisContext(console.timeEnd("Executed JavaScript")) if atom.config.get "run-in-console.showTimer"
 
     return result
+
+  babelCompile: (code) ->
+    babel = require "babel-core"
+
+    babelPreset = atom.config.get("run-in-console.babelPreset") || "es2015"
+
+    babelOptions =
+      ast: false
+      code: true
+      presets: ["babel-preset-#{babelPreset}"].map(require.resolve)
+
+    return babel.transform(code, babelOptions)
 
   matchingCursorScopeInEditor: (editor) ->
     scopes = @getScopes()
