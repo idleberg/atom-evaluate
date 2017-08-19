@@ -12,7 +12,7 @@ A fork of Roben Kleene's [run-in-atom](https://github.com/robenkleene/run-in-ato
 
 - Runs JavaScript, [TypeScript](https://www.typescriptlang.org/), [CoffeeScript](http://coffeescript.org/) and [LiveScript](http://livescript.net/)
 - Supports [Babel Presets](https://babeljs.io/docs/plugins/#presets)
-- All code is run inside a sandboxed [Node VM](https://nodejs.org/api/vm.html)
+- Code is evaluated in sandboxed [Node VM](https://nodejs.org/api/vm.html)
 - Define custom scopes for each supported language
 
 ## Installation
