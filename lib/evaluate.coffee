@@ -2,60 +2,105 @@ vm = require "vm"
 
 module.exports =
   config:
-    openDeveloperTools:
-      title: "Open Developer Tools"
-      description: "Opens the Developer Tools prior to evaluating code"
-      type: "boolean",
-      default: true
+    general:
+      title: "General Settings"
+      type: "object"
       order: 0
-    alwaysClearConsole:
-      title: "Always Clear Console"
-      description: "Clears the console prior to evaluating code"
-      type: "boolean"
-      default: false
+      properties:
+        openDeveloperTools:
+          title: "Open Developer Tools"
+          description: "Opens the Developer Tools prior to evaluating code"
+          type: "boolean",
+          default: true
+          order: 0
+        alwaysClearConsole:
+          title: "Always Clear Console"
+          description: "Clears the console prior to evaluating code"
+          type: "boolean"
+          default: false
+          order: 1
+        showTimer:
+          title: "Show Timer"
+          description: "Displays transpilation and execution times in console"
+          type: "boolean"
+          default: true
+          order: 2
+        babelPreset:
+          title: "Babel Preset"
+          description: "Specify the default [preset](https://babeljs.io/docs/plugins/#presets) for the Babel compiler"
+          type: "string",
+          default: "es2015",
+          enum: [
+            "es2015",
+            "es2016",
+            "es2017",
+            "env"
+          ],
+          order: 3
+    javaScript:
+      title: "JavaScript Settings"
+      type: "object"
       order: 1
-    showTimer:
-      title: "Show Timer"
-      description: "Displays transpilation and execution times in console"
-      type: "boolean"
-      default: true
+      properties:
+        scopes:
+          title: "Scopes for JavaScript"
+          description: "Space-delimited list of scopes identifying JavaScript files"
+          type: "string"
+          default: "source.js source.embedded.js"
+          order: 0
+        babelTransform:
+          title: "Babel Transform"
+          type: "boolean"
+          default: true
+          order: 1
+    typeScript:
+      title: "TypeScript Settings"
+      type: "object"
       order: 2
-    babelPreset:
-      title: "Babel Preset"
-      description: "Specify the default [preset](https://babeljs.io/docs/plugins/#presets) for the Babel compiler"
-      type: "string",
-      default: "es2015",
-      enum: [
-        "es2015",
-        "es2016",
-        "es2017",
-        "env"
-      ],
+      properties:
+        scopes:
+          title: "Scopes for TypeScript"
+          description: "Space-delimited list of scopes identifying TypeScript files"
+          type: "string"
+          default: "source.ts"
+          order: 0
+        babelTransform:
+          title: "Babel Transform"
+          type: "boolean"
+          default: false
+          order: 1
+    coffeeScript:
+      title: "CoffeeScript Settings"
+      type: "object"
       order: 3
-    scopesJavaScript:
-      title: "Scopes for JavaScript"
-      description: "Space-delimited list of scopes identifying JavaScript files"
-      type: "string"
-      default: "source.js source.embedded.js"
+      properties:
+        scopes:
+          title: "Scopes for CoffeeScript"
+          description: "Space-delimited list of scopes identifying CoffeeScript files"
+          type: "string"
+          default: "source.coffee source.embedded.coffee"
+          order: 0
+        babelTransform:
+          title: "Babel Transform"
+          type: "boolean"
+          default: false
+          order: 1
+    liveScript:
+      title: "LiveScript Settings"
+      type: "object"
       order: 4
-    scopesCoffeeScript:
-      title: "Scopes for CoffeeScript"
-      description: "Space-delimited list of scopes identifying CoffeeScript files"
-      type: "string"
-      default: "source.coffee source.embedded.coffee"
-      order: 5
-    scopesTypeScript:
-      title: "Scopes for TypeScript"
-      description: "Space-delimited list of scopes identifying TypeScript files"
-      type: "string"
-      default: "source.ts"
-      order: 6
-    scopesLiveScript:
-      title: "Scopes for LiveScript"
-      description: "Space-delimited list of scopes identifying LiveScript files"
-      type: "string"
-      default: "source.livescript"
-      order: 7
+      properties:
+        scopes:
+          title: "Scopes for LiveScript"
+          description: "Space-delimited list of scopes identifying LiveScript files"
+          type: "string"
+          default: "source.livescript"
+          order: 0
+        babelTransform:
+          title: "Babel Transform"
+          type: "boolean"
+          default: false
+          order: 1
   subscriptions: null
 
   activate: ->
@@ -72,57 +117,56 @@ module.exports =
 
   runCodeInScope: (code, scope, callback) ->
     # switch scope
-    if @isSupportedScope(scope, "JavaScript")
-      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.alwaysClearConsole"
+    if @isSupportedScope(scope)
+      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.general.alwaysClearConsole"
 
       try
-        babelCode = @babelCompile(code)
-        result = @evaluateJavaScript(babelCode.code)
+        result = @evaluateJavaScript(code)
 
         callback(null, null, result)
       catch error
         callback(error)
 
-    else if @isSupportedScope(scope, "CoffeeScript")
+    else if @isSupportedScope(scope, "coffeeScript")
       coffee = require "coffee-script"
-      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.alwaysClearConsole"
+      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.general.alwaysClearConsole"
 
       try
-        vm.runInThisContext(console.time("Transpiled CoffeeScript")) if atom.config.get "evaluate.showTimer"
+        vm.runInThisContext(console.time("Transpiled CoffeeScript")) if atom.config.get "evaluate.general.showTimer"
         jsCode = coffee.compile(code, bare: true)
-        vm.runInThisContext(console.timeEnd("Transpiled CoffeeScript")) if atom.config.get "evaluate.showTimer"
+        vm.runInThisContext(console.timeEnd("Transpiled CoffeeScript")) if atom.config.get "evaluate.general.showTimer"
 
-        result = @evaluateJavaScript(jsCode)
+        result = @evaluateJavaScript(jsCode, "coffeeScript")
 
         callback(null, null, result)
       catch error
         callback(error)
 
-    else if @isSupportedScope(scope, "TypeScript")
+    else if @isSupportedScope(scope, "typeScript")
       typestring = require "typestring"
-      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.alwaysClearConsole"
+      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.general.alwaysClearConsole"
 
       try
-        vm.runInThisContext(console.time("Transpiled TypeScript")) if atom.config.get "evaluate.showTimer"
+        vm.runInThisContext(console.time("Transpiled TypeScript")) if atom.config.get "evaluate.general.showTimer"
         jsCode = typestring.compile(code)
-        vm.runInThisContext(console.timeEnd("Transpiled TypeScript")) if atom.config.get "evaluate.showTimer"
+        vm.runInThisContext(console.timeEnd("Transpiled TypeScript")) if atom.config.get "evaluate.general.showTimer"
 
-        result = @evaluateJavaScript(jsCode)
+        result = @evaluateJavaScript(jsCode, "typeScript")
 
         callback(null, null, result)
       catch error
         callback(error)
 
-    else if @isSupportedScope(scope, "LiveScript")
+    else if @isSupportedScope(scope, "liveScript")
       livescript = require "LiveScript"
-      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.alwaysClearConsole"
+      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.general.alwaysClearConsole"
 
       try
-        vm.runInThisContext(console.time("Transpiled LiveScript")) if atom.config.get "evaluate.showTimer"
+        vm.runInThisContext(console.time("Transpiled LiveScript")) if atom.config.get "evaluate.general.showTimer"
         jsCode = livescript.compile(code, bare: true)
-        vm.runInThisContext(console.timeEnd("Transpiled LiveScript")) if atom.config.get "evaluate.showTimer"
+        vm.runInThisContext(console.timeEnd("Transpiled LiveScript")) if atom.config.get "evaluate.general.showTimer"
 
-        result = @evaluateJavaScript(jsCode)
+        result = @evaluateJavaScript(jsCode, "liveScript")
 
         callback(null, null, result)
       catch error
@@ -133,7 +177,7 @@ module.exports =
       callback(null, warning)
 
   evaluate: ->
-    atom.openDevTools() if atom.config.get "evaluate.openDeveloperTools"
+    atom.openDevTools() if atom.config.get "evaluate.general.openDeveloperTools"
       
     editor = atom.workspace.getActiveTextEditor()
     atom.notifications.addWarning("**evaluate**: No open files", dismissable: false) unless editor?.constructor.name is "TextEditor" or editor?.constructor.name is "ImageEditor"
@@ -154,26 +198,30 @@ module.exports =
       else
         console.log result if result
 
-  evaluateJavaScript: (code) ->
-    vm.runInThisContext(console.time("Evaluated JavaScript")) if atom.config.get "evaluate.showTimer"
+  evaluateJavaScript: (code, type = "javaScript") ->
+    if atom.config.get "evaluate.#{type}.babelTransform"
+      babelCode = @babelCompile(code)
+      code = babelCode.code
+
+    vm.runInThisContext(console.time("Evaluated JavaScript")) if atom.config.get "evaluate.general.showTimer"
     result = vm.runInThisContext(code)
-    vm.runInThisContext(console.timeEnd("Evaluated JavaScript")) if atom.config.get "evaluate.showTimer"
+    vm.runInThisContext(console.timeEnd("Evaluated JavaScript")) if atom.config.get "evaluate.general.showTimer"
 
     return result
 
   babelCompile: (code) ->
     babel = require "babel-core"
 
-    babelPreset = atom.config.get("evaluate.babelPreset") || "es2015"
+    babelPreset = atom.config.get("evaluate.general.babelPreset") || "es2015"
 
     babelOptions =
       ast: false
       code: true
       presets: ["babel-preset-#{babelPreset}"].map(require.resolve)
 
-    vm.runInThisContext(console.time("Transformed with Babel preset '#{babelPreset}'")) if atom.config.get "evaluate.showTimer"
+    vm.runInThisContext(console.time("Transformed with Babel preset '#{babelPreset}'")) if atom.config.get "evaluate.general.showTimer"
     babelCode = babel.transform(code, babelOptions)
-    vm.runInThisContext(console.timeEnd("Transformed with Babel preset '#{babelPreset}'")) if atom.config.get "evaluate.showTimer"
+    vm.runInThisContext(console.timeEnd("Transformed with Babel preset '#{babelPreset}'")) if atom.config.get "evaluate.general.showTimer"
 
     return babelCode
 
@@ -183,18 +231,18 @@ module.exports =
     for scope in scopes
       return scope if scope in editor.getLastCursor().getScopeDescriptor().scopes
 
-  isSupportedScope: (scope, type)->
-    if scope in atom.config.get("evaluate.scopes#{type}").trim().split(" ")
+  isSupportedScope: (scope, type = "javaScript")->
+    if scope in atom.config.get("evaluate.#{type}.scopes").trim().split(" ")
       return true
 
     return false
 
   getScopes: ->
-    scopeList = ["JavaScript", "CoffeeScript", "TypeScript", "LiveScript"]
+    scopeList = ["javaScript", "typeScript", "coffeeScript", "liveScript"]
     result = ""
 
     for scope in scopeList
-      result += atom.config.get("evaluate.scopes#{scope}").trim() + " "
+      result += atom.config.get("evaluate.#{scope}.scopes").trim() + " "
 
     return result.trim().split " "
 
