@@ -1,7 +1,7 @@
 {
   "name": "evaluate",
   "description": "Runs CoffeeScript, JavaScript, LiveScript or TypeScript in the Atom console",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "contributors": [
     {
       "name": "Jan T. Sott",
