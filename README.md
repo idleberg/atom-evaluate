@@ -8,6 +8,8 @@
 
 Runs JavaScript, CoffeeScript, TypeScript and LiveScript in the Atom console. A fork of Roben Kleene's [run-in-atom](https://github.com/robenkleene/run-in-atom) package.
 
+*Demo time: [See it in action](https://vimeo.com/230280295)*
+
 ## Installation
 
 ### apm
@@ -33,6 +35,10 @@ Clone the repository as `run-in-console`:
 ```bash
 $ git clone https://github.com/idleberg/atom-run-in-console run-in-console
 ```
+
+### Usage
+
+You can run entire files or selections. Use the context-menu, the command palette or the keyboard shortcut <kbd>Cmd</kbd>+<kbd>Alt</kbd>+<kbd>R</kbd> to run.
 
 ## License
 
