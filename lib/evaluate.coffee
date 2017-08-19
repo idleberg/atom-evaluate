@@ -76,7 +76,8 @@ module.exports =
       vm.runInThisContext(console.clear()) if atom.config.get "evaluate.alwaysClearConsole"
 
       try
-        result = @evaluateJavaScript(code)
+        babelCode = @babelCompile(code)
+        result = @evaluateJavaScript(babelCode.code)
 
         callback(null, null, result)
       catch error
@@ -154,10 +155,8 @@ module.exports =
         console.log result if result
 
   evaluateJavaScript: (code) ->
-    babelCode = @babelCompile(code)
-
     vm.runInThisContext(console.time("Evaluated JavaScript")) if atom.config.get "evaluate.showTimer"
-    result = vm.runInThisContext(babelCode.code)
+    result = vm.runInThisContext(code)
     vm.runInThisContext(console.timeEnd("Evaluated JavaScript")) if atom.config.get "evaluate.showTimer"
 
     return result
