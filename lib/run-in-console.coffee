@@ -60,7 +60,7 @@ module.exports =
     vm = require "vm"
 
     switch scope
-      when "source.js", "source.embedded.js"
+      when atom.config.get("run-in-console.scopesJavaScript").trim().split(' ').join(',') #.indexOf(scope) #"source.js", "source.embedded.js"
         vm.runInThisContext(console.clear()) if atom.config.get "run-in-console.alwaysClearConsole"
 
         try
