@@ -1,0 +1,2 @@
+'atom-text-editor':
+  'cmd-alt-r': 'run-in-console:run-in-console'

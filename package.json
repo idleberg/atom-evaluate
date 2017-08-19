@@ -1,0 +1,44 @@
+{
+  "name": "run-in-console",
+  "description": "Runs CoffeeScript, JavaScript, LiveScript or TypeScript in the Atom console",
+  "version": "0.0.0",
+  "contributors": [
+    {
+      "name": "Jan T. Sott",
+      "url": "https://github.com/idleberg"
+    },
+    {
+      "name": "Roben Kleene",
+      "url": "https://github.com/robenkleene"
+    }
+  ],
+  "main": "./lib/run-in-console",
+  "repository": "https://github.com/idleberg/run-in-console",
+  "activationCommands": {
+    "atom-text-editor": [
+      "run-in-console:run-in-console"
+    ]
+  },
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "coffee-script": "^1.12.7",
+    "LiveScript": "^1.3.1",
+    "typestring": "2.3.3"
+  },
+  "devDependencies": {
+    "coffeelint-stylish": "^0.1.2",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-coffeelint": "^0.6.0",
+    "gulp-debug": "^3.1.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-jsonlint": "^1.2.0",
+    "gulp-lesshint": "^4.0.0",
+    "jshint": "^2.9.5"
+  },
+  "scripts": {
+    "test": "gulp lint"
+  }
+}
