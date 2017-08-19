@@ -1,3 +1,5 @@
+vm = require "vm"
+
 module.exports =
   config:
     openDeveloperTools:
@@ -69,8 +71,6 @@ module.exports =
     @subscriptions = null
 
   runCodeInScope: (code, scope, callback) ->
-    vm = require "vm"
-
     # switch scope
     if @isSupportedScope(scope, "JavaScript")
       vm.runInThisContext(console.clear()) if atom.config.get "evaluate.alwaysClearConsole"
@@ -154,8 +154,6 @@ module.exports =
         console.log result if result
 
   evaluateJavaScript: (code) ->
-    vm = require "vm"
-
     babelCode = @babelCompile(code)
 
     vm.runInThisContext(console.time("Evaluated JavaScript")) if atom.config.get "evaluate.showTimer"
@@ -174,7 +172,11 @@ module.exports =
       code: true
       presets: ["babel-preset-#{babelPreset}"].map(require.resolve)
 
-    return babel.transform(code, babelOptions)
+    vm.runInThisContext(console.time("Transformed with Babel preset '#{babelPreset}'")) if atom.config.get "evaluate.showTimer"
+    babelCode = babel.transform(code, babelOptions)
+    vm.runInThisContext(console.timeEnd("Transformed with Babel preset '#{babelPreset}'")) if atom.config.get "evaluate.showTimer"
+
+    return babelCode
 
   matchingCursorScopeInEditor: (editor) ->
     scopes = @getScopes()
