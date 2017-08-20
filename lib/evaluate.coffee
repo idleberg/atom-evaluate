@@ -31,12 +31,25 @@ module.exports =
           type: "string",
           default: "es2015",
           enum: [
-            "es2015",
-            "es2016",
-            "es2017",
+            "es2015"
+            "es2016"
+            "es2017"
             "env"
           ],
           order: 3
+        babelExperimentalPreset:
+          title: "Babel Experimental Preset"
+          description: "Specify an [experimental preset](https://babeljs.io/docs/plugins/#presets-stage-x-experimental-presets-) for Babel"
+          type: "string",
+          default: "(none)",
+          enum: [
+            "(none)"
+            "stage-0"
+            "stage-1"
+            "stage-2"
+            "stage-3"
+          ],
+          order: 4
     javaScript:
       title: "JavaScript Settings"
       type: "object"
@@ -240,17 +253,22 @@ module.exports =
 
   babelCompile: (code) ->
     babel = require "babel-core"
+    presets = []
 
     babelPreset = atom.config.get("evaluate.general.babelPreset") || "es2015"
+    presets.push "babel-preset-#{babelPreset}"
+
+    babelExperimentalPreset = atom.config.get("evaluate.general.babelExperimentalPreset")
+    presets.push "babel-preset-#{babelExperimentalPreset}" if babelExperimentalPreset isnt "(none)"
 
     babelOptions =
       ast: false
       code: true
-      presets: ["babel-preset-#{babelPreset}"].map(require.resolve)
+      presets: presets.map(require.resolve)
 
-    vm.runInThisContext(console.time("Transformed with Babel preset '#{babelPreset}'")) if atom.config.get "evaluate.general.showTimer"
+    vm.runInThisContext(console.time("Transformed with Babel")) if atom.config.get "evaluate.general.showTimer"
     babelCode = babel.transform(code, babelOptions)
-    vm.runInThisContext(console.timeEnd("Transformed with Babel preset '#{babelPreset}'")) if atom.config.get "evaluate.general.showTimer"
+    vm.runInThisContext(console.timeEnd("Transformed with Babel")) if atom.config.get "evaluate.general.showTimer"
 
     return babelCode
 
