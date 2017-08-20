@@ -214,7 +214,7 @@ module.exports =
       catch error
         callback(error)
 
-    else
+    else  
       warning = "Evaluating '#{scope}' is not supported."
       callback(null, warning)
 
@@ -222,9 +222,7 @@ module.exports =
     atom.openDevTools() if atom.config.get "evaluate.general.openDeveloperTools"
       
     editor = atom.workspace.getActiveTextEditor()
-    atom.notifications.addWarning("**evaluate**: No open files", dismissable: false) unless editor?.constructor.name is "TextEditor" or editor?.constructor.name is "ImageEditor"
-
-    code = editor.getSelectedText()
+    code = @getSelections(editor)
 
     if code
       scope = @matchingCursorScopeInEditor(editor)
@@ -295,3 +293,13 @@ module.exports =
 
   scopeInEditor: (editor) ->
     editor.getGrammar()?.scopeName
+
+  getSelections: (editor) ->
+    selections = editor.getSelections()
+    code = ""
+
+    if selections[0].getText()
+      for selection in selections
+        code += selection.getText()
+
+    return code
