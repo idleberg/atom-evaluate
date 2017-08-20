@@ -266,9 +266,9 @@ module.exports =
       code: true
       presets: presets.map(require.resolve)
 
-    vm.runInThisContext(console.time("Transformed with Babel")) if atom.config.get "evaluate.general.showTimer"
+    vm.runInThisContext(console.time("Transformed with Babel [\"#{presets.join("\", \"")}\"]")) if atom.config.get "evaluate.general.showTimer"
     babelCode = babel.transform(code, babelOptions)
-    vm.runInThisContext(console.timeEnd("Transformed with Babel")) if atom.config.get "evaluate.general.showTimer"
+    vm.runInThisContext(console.timeEnd("Transformed with Babel [\"#{presets.join("\", \"")}\"]")) if atom.config.get "evaluate.general.showTimer"
 
     return babelCode
 
