@@ -27,7 +27,7 @@ Install `evaluate` from Atom's [Package Manager](http://flight-manual.atom.io/us
 
 Change to your Atom packages directory:
 
-```bash
+```
 # Windows
 $ cd %USERPROFILE%\.atom\packages
 
@@ -37,7 +37,7 @@ $ cd ~/.atom/packages/
 
 Clone the repository as `evaluate`:
 
-```bash
+```
 $ git clone https://github.com/idleberg/atom-evaluate evaluate
 ```
 
