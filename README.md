@@ -43,7 +43,7 @@ $ git clone https://github.com/idleberg/atom-evaluate evaluate
 
 ## Usage
 
-You can evaluate entire files or selections. Use the context-menu, the command palette or the keyboard shortcut <kbd>Cmd</kbd>+<kbd>Alt</kbd>+<kbd>R</kbd> to evaluate code.
+To evaluate code, run the command from the context-menu, the command palette or using the <kbd>Cmd</kbd>+<kbd>Alt</kbd>+<kbd>R</kbd> shortcut. You can evaluate entire files or selections (Note that code will be evaluated in the order it has been selected!)
 
 ## License
 
