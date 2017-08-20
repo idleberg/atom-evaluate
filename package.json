@@ -1,7 +1,8 @@
 {
   "name": "evaluate",
-  "description": "Runs CoffeeScript, JavaScript, LiveScript or TypeScript in the Atom console",
+  "description": "Runs JavaScript, TypeScript, CoffeeScript and LiveScript directly in Atom",
   "version": "0.8.0",
+  "license": "MIT",
   "contributors": [
     {
       "name": "Jan T. Sott",
@@ -12,14 +13,20 @@
       "url": "https://github.com/robenkleene"
     }
   ],
-  "main": "./lib/evaluate",
   "repository": "https://github.com/idleberg/atom-evaluate",
+  "keywords": [
+    "evaluate",
+    "javascript",
+    "typescript",
+    "coffeescript",
+    "run"
+  ],
+  "main": "./lib/evaluate",
   "activationCommands": {
     "atom-text-editor": [
       "evaluate:run-code"
     ]
   },
-  "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
