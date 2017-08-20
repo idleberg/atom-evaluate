@@ -63,7 +63,7 @@ module.exports =
           order: 0
         babelTransform:
           title: "Babel Transform"
-          description: "Transforms code with selected Babel preset"
+          description: "Transforms code with specified Babel presets (see above)"
           type: "boolean"
           default: true
           order: 1
@@ -80,7 +80,7 @@ module.exports =
           order: 0
         babelTransform:
           title: "Babel Transform"
-          description: "Transforms code with selected Babel preset"
+          description: "Transforms code with specified Babel presets (see above)"
           type: "boolean"
           default: false
           order: 1
@@ -103,7 +103,7 @@ module.exports =
           order: 1
         babelTransform:
           title: "Babel Transform"
-          description: "Transforms code with selected Babel preset"
+          description: "Transforms code with specified Babel presets (see above)"
           type: "boolean"
           default: false
           order: 2
@@ -132,7 +132,7 @@ module.exports =
           order: 2
         babelTransform:
           title: "Babel Transform"
-          description: "Transforms code with selected Babel preset"
+          description: "Transforms code with specified Babel presets (see above)"
           type: "boolean"
           default: false
           order: 3
