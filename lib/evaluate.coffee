@@ -27,7 +27,7 @@ module.exports =
           order: 2
         babelPreset:
           title: "Babel Preset"
-          description: "Specify the default [preset](https://babeljs.io/docs/plugins/#presets) for the Babel compiler"
+          description: "Specify the default [preset](https://babeljs.io/docs/plugins/#presets) for Babel"
           type: "string",
           default: "es2015",
           enum: [
@@ -50,6 +50,7 @@ module.exports =
           order: 0
         babelTransform:
           title: "Babel Transform"
+          description: "Transforms code with selected Babel preset"
           type: "boolean"
           default: true
           order: 1
@@ -66,6 +67,7 @@ module.exports =
           order: 0
         babelTransform:
           title: "Babel Transform"
+          description: "Transforms code with selected Babel preset"
           type: "boolean"
           default: false
           order: 1
@@ -80,11 +82,18 @@ module.exports =
           type: "string"
           default: "source.coffee source.embedded.coffee"
           order: 0
+        bare:
+          title: "Bare"
+          description: "Compiles the JavaScript without the [top-level function safety wrapper](http://coffeescript.org/#lexical-scope)"
+          type: "boolean"
+          default: true
+          order: 1
         babelTransform:
           title: "Babel Transform"
+          description: "Transforms code with selected Babel preset"
           type: "boolean"
           default: false
-          order: 1
+          order: 2
     liveScript:
       title: "LiveScript Settings"
       type: "object"
@@ -96,11 +105,24 @@ module.exports =
           type: "string"
           default: "source.livescript"
           order: 0
-        babelTransform:
-          title: "Babel Transform"
+        bare:
+          title: "Bare"
+          description: "Compiles the JavaScript without the top-level function safety wrapper"
+          type: "boolean"
+          default: true
+          order: 1
+        const:
+          title: "Constants"
+          description: "Compiles all variables as constants"
           type: "boolean"
           default: false
-          order: 1
+          order: 2
+        babelTransform:
+          title: "Babel Transform"
+          description: "Transforms code with selected Babel preset"
+          type: "boolean"
+          default: false
+          order: 3
   subscriptions: null
 
   activate: ->
@@ -131,9 +153,12 @@ module.exports =
       coffee = require "coffee-script"
       vm.runInThisContext(console.clear()) if atom.config.get "evaluate.general.alwaysClearConsole"
 
+      options =
+        bare: atom.config.get "evaluate.coffeeScript.bare"
+
       try
         vm.runInThisContext(console.time("Transpiled CoffeeScript")) if atom.config.get "evaluate.general.showTimer"
-        jsCode = coffee.compile(code, bare: true)
+        jsCode = coffee.compile(code, options)
         vm.runInThisContext(console.timeEnd("Transpiled CoffeeScript")) if atom.config.get "evaluate.general.showTimer"
 
         result = @evaluateJavaScript(jsCode, "coffeeScript")
@@ -161,9 +186,13 @@ module.exports =
       livescript = require "LiveScript"
       vm.runInThisContext(console.clear()) if atom.config.get "evaluate.general.alwaysClearConsole"
 
+      options =
+        bare: atom.config.get "evaluate.liveScript.bare"
+        const: atom.config.get "evaluate.liveScript.const"
+
       try
         vm.runInThisContext(console.time("Transpiled LiveScript")) if atom.config.get "evaluate.general.showTimer"
-        jsCode = livescript.compile(code, bare: true)
+        jsCode = livescript.compile(code, options)
         vm.runInThisContext(console.timeEnd("Transpiled LiveScript")) if atom.config.get "evaluate.general.showTimer"
 
         result = @evaluateJavaScript(jsCode, "liveScript")
