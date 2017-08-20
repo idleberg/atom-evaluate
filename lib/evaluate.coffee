@@ -214,7 +214,7 @@ module.exports =
       catch error
         callback(error)
 
-    else  
+    else
       warning = "Evaluating '#{scope}' is not supported."
       callback(null, warning)
 
