@@ -1,5 +1,8 @@
 vm = require "vm"
 
+String::capitalize = ->
+  @charAt(0).toUpperCase() + @slice(1)
+
 module.exports =
   config:
     general:
@@ -143,10 +146,15 @@ module.exports =
     { CompositeDisposable } = require "atom"
     @subscriptions = new CompositeDisposable
 
+
     # Register command that toggles this view
     @subscriptions.add atom.commands.add "atom-workspace", "evaluate:run-code": => @evaluate()
 
+    require("./ga").sendEvent("evaluate", "activate")
+
   deactivate: ->
+    require("./ga").sendEvent("evaluate", "deactivate")
+
     @subscriptions?.dispose()
     @subscriptions = null
 
@@ -220,7 +228,7 @@ module.exports =
 
   evaluate: ->
     atom.openDevTools() if atom.config.get "evaluate.general.openDeveloperTools"
-      
+
     editor = atom.workspace.getActiveTextEditor()
     code = @getSelections(editor)
 
@@ -240,8 +248,10 @@ module.exports =
 
   evaluateJavaScript: (code, type = "javaScript") ->
     if atom.config.get "evaluate.#{type}.babelTransform"
-      babelCode = @babelCompile(code)
+      babelCode = @babelCompile(code, type)
       code = babelCode.code
+
+    require("./ga").sendEvent("evaluate", type.capitalize())
 
     vm.runInThisContext(console.time("Evaluated JavaScript")) if atom.config.get "evaluate.general.showTimer"
     result = vm.runInThisContext(code)
@@ -249,7 +259,7 @@ module.exports =
 
     return result
 
-  babelCompile: (code) ->
+  babelCompile: (code, type) ->
     babel = require "babel-core"
     presets = []
 

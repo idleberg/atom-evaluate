@@ -42,6 +42,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
     "coffee-script": "^1.12.7",
+    "getmac": "^1.2.1",
     "typestring": "2.3.3"
   },
   "devDependencies": {
