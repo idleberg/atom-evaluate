@@ -259,7 +259,7 @@ module.exports =
 
     return result
 
-  babelCompile: (code, type) ->
+  babelCompile: (code) ->
     babel = require "babel-core"
     presets = []
 
