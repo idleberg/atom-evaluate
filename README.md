@@ -10,9 +10,9 @@ Evaluates JavaScript, TypeScript, CoffeeScript, and LiveScript directly in Atom.
 
 ## Features
 
+- Code is evaluated in sandboxed [Node VM](https://nodejs.org/api/vm.html)
 - Runs JavaScript, [TypeScript](https://www.typescriptlang.org/), [CoffeeScript](http://coffeescript.org/) and [LiveScript](http://livescript.net/)
 - Supports [Babel Presets](https://babeljs.io/docs/plugins/#presets)
-- Code is evaluated in sandboxed [Node VM](https://nodejs.org/api/vm.html)
 - Define custom scopes for each supported language
 
 ## Installation
