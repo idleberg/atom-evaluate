@@ -150,11 +150,7 @@ module.exports =
     # Register command that toggles this view
     @subscriptions.add atom.commands.add "atom-workspace", "evaluate:run-code": => @evaluate()
 
-    require("./ga").sendEvent("evaluate", "activate")
-
   deactivate: ->
-    require("./ga").sendEvent("evaluate", "deactivate")
-
     @subscriptions?.dispose()
     @subscriptions = null
 
