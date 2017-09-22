@@ -247,7 +247,7 @@ module.exports =
       babelCode = @babelCompile(code, type)
       code = babelCode.code
 
-    require("./ga").sendEvent("evaluate", type.capitalize())
+    require("./ga").sendEvent "evaluate", type.capitalize()
 
     vm.runInThisContext(console.time("Evaluated JavaScript")) if atom.config.get "evaluate.general.showTimer"
     result = vm.runInThisContext(code)

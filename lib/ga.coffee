@@ -58,5 +58,5 @@ module.exports = GoogleAnalytics =
 atom.packages.onDidActivatePackage (pkg) ->
   if "metrics" == pkg.name
     meta = atom.packages.getLoadedPackage("evaluate").metadata
-    require("./ga").sendEvent "core", "activated", meta.version
+    require("./ga").sendEvent meta.name, "Package Activated (v#{meta.version})",
   return
