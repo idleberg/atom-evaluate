@@ -1,7 +1,7 @@
 {
   "name": "evaluate",
   "description": "Runs JavaScript, TypeScript, CoffeeScript and LiveScript directly in Atom",
-  "version": "0.9.8",
+  "version": "0.10.0",
   "license": "MIT",
   "scripts": {
     "precommit": "gulp lint",
