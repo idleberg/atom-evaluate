@@ -96,10 +96,10 @@ module.exports =
           title: "Version"
           description: "Specify the version of CoffeScript you would like to use"
           type: "string",
-          default: "v2.x",
+          default: "v2",
           enum: [
-            "v1.x"
-            "v2.x"
+            "v1"
+            "v2"
           ],
           order: 0
         scopes:
@@ -177,7 +177,8 @@ module.exports =
         callback(error)
 
     else if @isSupportedScope(scope, "coffeeScript")
-      if atom.config.get "evaluate.coffeeScript.version" is "v2.x"
+      coffeeVersion = atom.config.get "evaluate.coffeeScript.version"
+      if coffeeVersion is "v2"
         coffee = require "coffeescript"
       else
         coffee = require "coffee-script"
@@ -188,9 +189,9 @@ module.exports =
         bare: atom.config.get "evaluate.coffeeScript.bare"
 
       try
-        vm.runInThisContext(console.time("Transpiled CoffeeScript")) if atom.config.get "evaluate.general.showTimer"
+        vm.runInThisContext(console.time("Compiled CoffeeScript #{coffeeVersion}")) if atom.config.get "evaluate.general.showTimer"
         jsCode = coffee.compile(code, options)
-        vm.runInThisContext(console.timeEnd("Transpiled CoffeeScript")) if atom.config.get "evaluate.general.showTimer"
+        vm.runInThisContext(console.timeEnd("Compiled CoffeeScript #{coffeeVersion}")) if atom.config.get "evaluate.general.showTimer"
 
         result = @evaluateJavaScript(jsCode, "coffeeScript")
 
@@ -203,9 +204,9 @@ module.exports =
       vm.runInThisContext(console.clear()) if atom.config.get "evaluate.general.alwaysClearConsole"
 
       try
-        vm.runInThisContext(console.time("Transpiled TypeScript")) if atom.config.get "evaluate.general.showTimer"
+        vm.runInThisContext(console.time("Compiled TypeScript")) if atom.config.get "evaluate.general.showTimer"
         jsCode = typestring.compile(code)
-        vm.runInThisContext(console.timeEnd("Transpiled TypeScript")) if atom.config.get "evaluate.general.showTimer"
+        vm.runInThisContext(console.timeEnd("Compiled TypeScript")) if atom.config.get "evaluate.general.showTimer"
 
         result = @evaluateJavaScript(jsCode, "typeScript")
 
@@ -222,9 +223,9 @@ module.exports =
         const: atom.config.get "evaluate.liveScript.const"
 
       try
-        vm.runInThisContext(console.time("Transpiled LiveScript")) if atom.config.get "evaluate.general.showTimer"
+        vm.runInThisContext(console.time("Compiled LiveScript")) if atom.config.get "evaluate.general.showTimer"
         jsCode = livescript.compile(code, options)
-        vm.runInThisContext(console.timeEnd("Transpiled LiveScript")) if atom.config.get "evaluate.general.showTimer"
+        vm.runInThisContext(console.timeEnd("Compiled LiveScript")) if atom.config.get "evaluate.general.showTimer"
 
         result = @evaluateJavaScript(jsCode, "liveScript")
 
