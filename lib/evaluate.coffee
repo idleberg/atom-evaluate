@@ -92,24 +92,34 @@ module.exports =
       type: "object"
       order: 3
       properties:
+        version:
+          title: "Version"
+          description: "Specify the version of CoffeScript you would like to use"
+          type: "string",
+          default: "v2.x",
+          enum: [
+            "v1.x"
+            "v2.x"
+          ],
+          order: 0
         scopes:
           title: "Scopes for CoffeeScript"
           description: "Space-delimited list of scopes identifying CoffeeScript files"
           type: "string"
           default: "source.coffee source.embedded.coffee"
-          order: 0
+          order: 1
         bare:
           title: "Bare"
           description: "Compiles the JavaScript without the [top-level function safety wrapper](http://coffeescript.org/#lexical-scope)"
           type: "boolean"
           default: true
-          order: 1
+          order: 2
         babelTransform:
           title: "Babel Transform"
           description: "Transforms code with specified Babel presets (see above)"
           type: "boolean"
           default: false
-          order: 2
+          order: 3
     liveScript:
       title: "LiveScript Settings"
       type: "object"
@@ -167,7 +177,11 @@ module.exports =
         callback(error)
 
     else if @isSupportedScope(scope, "coffeeScript")
-      coffee = require "coffee-script"
+      if atom.config.get "evaluate.coffeeScript.version" is "v2.x"
+        coffee = require "coffeescript"
+      else
+        coffee = require "coffee-script"
+
       vm.runInThisContext(console.clear()) if atom.config.get "evaluate.general.alwaysClearConsole"
 
       options =
