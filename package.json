@@ -3,6 +3,10 @@
   "description": "Runs JavaScript, TypeScript, CoffeeScript and LiveScript directly in Atom",
   "version": "0.9.8",
   "license": "MIT",
+  "scripts": {
+    "precommit": "gulp lint",
+    "test": "gulp lint"
+  },
   "contributors": [
     {
       "name": "Jan T. Sott",
@@ -31,7 +35,6 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
-    "livescript": "^1.5.0",
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
@@ -42,7 +45,9 @@
     "babel-preset-stage-2": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
     "coffee-script": "^1.12.7",
+    "coffeescript": "^2.3.0",
     "getmac": "^1.4.1",
+    "livescript": "^1.5.0",
     "typestring": "2.6.1"
   },
   "devDependencies": {
@@ -50,12 +55,7 @@
     "gulp": "^4.0.0",
     "gulp-coffeelint": "^0.6.0",
     "gulp-debug": "^4.0.0",
-    "gulp-jshint": "^2.0.4",
     "gulp-jsonlint": "^1.2.1",
-    "gulp-lesshint": "^5.0.2",
-    "jshint": "^2.9.5"
-  },
-  "scripts": {
-    "test": "gulp lint"
+    "husky": "^0.14.3"
   }
 }
