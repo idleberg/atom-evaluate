@@ -106,7 +106,7 @@ module.exports =
           title: "Scopes for CoffeeScript"
           description: "Space-delimited list of scopes identifying CoffeeScript files"
           type: "string"
-          default: "source.coffee source.embedded.coffee"
+          default: "source.coffee source.embedded.coffee source.litcoffee"
           order: 1
         bare:
           title: "Bare"
