@@ -1,17 +1,17 @@
 # evaluate
 
-[![apm](https://img.shields.io/apm/l/evaluate.svg?style=flat-square)](https://atom.io/packages/evaluate)
-[![apm](https://img.shields.io/apm/v/evaluate.svg?style=flat-square)](https://atom.io/packages/evaluate)
-[![apm](https://img.shields.io/apm/dm/evaluate.svg?style=flat-square)](https://atom.io/packages/evaluate)
-[![Travis](https://img.shields.io/travis/idleberg/atom-evaluate.svg?style=flat-square)](https://travis-ci.org/idleberg/atom-evaluate)
-[![David](https://img.shields.io/david/dev/idleberg/atom-evaluate.svg?style=flat-square)](https://david-dm.org/idleberg/atom-evaluate?type=dev)
+[![apm](https://flat.badgen.net/apm/license/evaluate)](https://atom.io/packages/evaluate)
+[![apm](https://flat.badgen.net/apm/v/evaluate)](https://atom.io/packages/evaluate)
+[![apm](https://flat.badgen.net/apm/dl/evaluate)](https://atom.io/packages/evaluate)
+[![CircleCI](https://flat.badgen.net/circleci/github/idleberg/atom-evaluate)](https://circleci.com/gh/idleberg/atom-evaluate)
+[![David](https://flat.badgen.net/david/dep/idleberg/atom-evaluate)](https://david-dm.org/idleberg/atom-evaluate)
 
-Evaluates JavaScript, TypeScript, CoffeeScript, and LiveScript directly in Atom. A fork of Roben Kleene's [run-in-atom](https://github.com/robenkleene/run-in-atom) package. [See it in action](https://vimeo.com/230280295)!
+Evaluates JavaScript, TypeScript, and CoffeeScript directly in Atom. A fork of Roben Kleene's [run-in-atom](https://github.com/robenkleene/run-in-atom) package. [See it in action](https://vimeo.com/230280295)!
 
 ## Features
 
 - Code is evaluated in sandboxed [Node VM](https://nodejs.org/api/vm.html)
-- Runs JavaScript, [TypeScript](https://www.typescriptlang.org/), [CoffeeScript](http://coffeescript.org/) and [LiveScript](http://livescript.net/)
+- Runs JavaScript, [TypeScript](https://www.typescriptlang.org/), [CoffeeScript](http://coffeescript.org/)
 - Supports [Babel Presets](https://babeljs.io/docs/plugins/#presets)
 - Define custom scopes for each supported language
 

@@ -120,35 +120,6 @@ module.exports =
           type: "boolean"
           default: false
           order: 3
-    liveScript:
-      title: "LiveScript Settings"
-      type: "object"
-      order: 4
-      properties:
-        scopes:
-          title: "Scopes for LiveScript"
-          description: "Space-delimited list of scopes identifying LiveScript files"
-          type: "string"
-          default: "source.livescript"
-          order: 0
-        bare:
-          title: "Bare"
-          description: "Compiles the JavaScript without the top-level function safety wrapper"
-          type: "boolean"
-          default: true
-          order: 1
-        const:
-          title: "Constants"
-          description: "Compiles all variables as constants"
-          type: "boolean"
-          default: false
-          order: 2
-        babelTransform:
-          title: "Babel Transform"
-          description: "Transforms code with specified Babel presets (see above)"
-          type: "boolean"
-          default: false
-          order: 3
   subscriptions: null
 
   activate: ->
@@ -209,25 +180,6 @@ module.exports =
         vm.runInThisContext(console.timeEnd("Compiled TypeScript")) if atom.config.get "evaluate.general.showTimer"
 
         result = @evaluateJavaScript(jsCode, "typeScript")
-
-        callback(null, null, result)
-      catch error
-        callback(error)
-
-    else if @isSupportedScope(scope, "liveScript")
-      livescript = require "LiveScript"
-      vm.runInThisContext(console.clear()) if atom.config.get "evaluate.general.alwaysClearConsole"
-
-      options =
-        bare: atom.config.get "evaluate.liveScript.bare"
-        const: atom.config.get "evaluate.liveScript.const"
-
-      try
-        vm.runInThisContext(console.time("Compiled LiveScript")) if atom.config.get "evaluate.general.showTimer"
-        jsCode = livescript.compile(code, options)
-        vm.runInThisContext(console.timeEnd("Compiled LiveScript")) if atom.config.get "evaluate.general.showTimer"
-
-        result = @evaluateJavaScript(jsCode, "liveScript")
 
         callback(null, null, result)
       catch error
@@ -304,7 +256,7 @@ module.exports =
     return false
 
   getScopes: ->
-    scopeList = ["javaScript", "typeScript", "coffeeScript", "liveScript"]
+    scopeList = ["javaScript", "typeScript", "coffeeScript"]
     result = ""
 
     for scope in scopeList
