@@ -48,7 +48,3 @@ To evaluate code, run the command from the context-menu, the command palette or 
 ## License
 
 This work is licensed under the [The MIT License](LICENSE.md).
-
-## Donate
-
-You are welcome support this project using [Flattr](https://flattr.com/submit/auto?user_id=idleberg&url=https://github.com/idleberg/atom-evaluate) or Bitcoin `17CXJuPsmhuTzFV2k4RKYwpEHVjskJktRd`
