@@ -6,7 +6,9 @@
 [![CircleCI](https://flat.badgen.net/circleci/github/idleberg/atom-evaluate)](https://circleci.com/gh/idleberg/atom-evaluate)
 [![David](https://flat.badgen.net/david/dep/idleberg/atom-evaluate)](https://david-dm.org/idleberg/atom-evaluate)
 
-Evaluates JavaScript, TypeScript, and CoffeeScript directly in Atom. A fork of Roben Kleene's [run-in-atom](https://github.com/robenkleene/run-in-atom) package. [See it in action](https://vimeo.com/230280295)!
+Evaluates JavaScript, TypeScript, and CoffeeScript directly in Atom. A fork of Roben Kleene's [run-in-atom](https://github.com/robenkleene/run-in-atom) package.
+
+[See it in action](https://vimeo.com/230280295)!
 
 ## Features
 
